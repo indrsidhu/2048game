@@ -4,7 +4,7 @@ margin-left:auto;
 margin-right:auto;
 }
 
-#gamegrid .col{
+#gamegrid .cell{
 background:#eaeaea;
 display:block;
 width:100px;
@@ -12,9 +12,15 @@ height:100px;
 float:left;
 text-align:center;
 margin:10px;
+font-size:30px;
 }
 
-#gamegrid .col span{
+#gamegrid .cell span{
 margin-top:35px;
 display:block;
+}
+
+#gamegrid .active-cell{
+background:#61B891;
+color:#fff;
 }
