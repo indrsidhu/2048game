@@ -31,21 +31,60 @@ $("body").on("keydown", function(e){
 /* Lib functions */
 
 function handelRightMove(gamegrid){
+	console.log(gamegrid);
+	
+	cellWithValues = [];
 	jQuery('#gamegrid > .cell > span').each( function (index, data) {
-		if(gamegrid[index]>0){
-			currIndex = index;
-			moveIndex = index+1;
-			if(moveIndex<16){
-				gamegrid[moveIndex] = gamegrid[index];			
-				gamegrid[currIndex] = 0;
-			}
+		if(gamegrid[index]>0){ //pick only which have value
+			cellWithValues.push(index);
 		}
 	});
+	
+	cellWithValues.forEach(function(index) {
+		moveIndex = getPosibbleMove(gamegrid,index,'right');
+		//move only if cell moved
+		if(moveIndex!=index){
+			gamegrid[moveIndex] = gamegrid[index];
+			gamegrid[index] = 0;
+		}
+	});
+	
+	console.log(gamegrid);
 	return gamegrid;
 }
 
+function getPosibbleMove(gamegrid,index,moveType){
+	console.log(index);
+	switch(moveType){
+		case 'right':
+			boundries = [3,7,11,15]; // right boundries
+			//process only if not already at boundries
+			if(boundries.indexOf(index)==-1){
+				if(index<3){
+					do{
+						index++;
+					}while(index<3);
+				} else if(index<7){
+					do{
+						index++;
+					}while(index<7);
+				} else if(index<11){
+					do{
+						index++;
+					}while(index<11);
+				} else if(index<15){
+					do{
+						index++;
+					}while(index<15);
+				}
+			}//process only if not already at boundries
+		break;
+	}
+	console.log(index);
+	return index;
+}
+
 function printCell(gamegrid){
-	console.log(gamegrid);
 	jQuery('#gamegrid > .cell > span').each( function (index, data) {
 		if(gamegrid[index]>0){
 			$(this).text(gamegrid[index]);
