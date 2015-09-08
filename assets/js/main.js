@@ -4,8 +4,8 @@ var gamegrid = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 //Initially fill first two cell with random 2 or 4;
 randomCell = Math.floor((Math.random() * 15) + 1);
 gamegrid[randomCell] = getRandomeValue();
-randomCell = Math.floor((Math.random() * 15) + 1);
-gamegrid[randomCell] = getRandomeValue();
+//randomCell = Math.floor((Math.random() * 15) + 1);
+//gamegrid[randomCell] = getRandomeValue();
 printCell(gamegrid);
 
 
@@ -31,6 +31,35 @@ $("body").on("keydown", function(e){
 /* Lib functions */
 
 function handelRightMove(gamegrid){
+
+	console.log(gamegrid);
+	//process each row
+	for (i = 1; i <= 4; i++) {
+		//process each column from right most
+		for (j = 4; j >= 1; j--) {
+			//console.log('row'+i+'-col'+j);
+			//console.log('#gamegrid > .row'+i+'-col'+j+' > span');
+			index = jQuery('#gamegrid > .row'+i+'-col'+j+'').attr('index');
+			index = parseInt(index);
+			do{
+				if(((gamegrid[index])>0) && (j<4)){
+					//if next move is 0 and column is not last column then move
+					if(gamegrid[index+1]==0){
+						gamegrid[index+1] = gamegrid[index];
+						gamegrid[index] = 0;
+					}
+					console.log("on");
+				}//if not empty
+				index++;
+			}while(index<((i*4)-1))//while no reached at last column of each row
+			
+		}//col loop
+	}//row loop
+
+	console.log(gamegrid);
+	
+
+	/*
 	console.log(gamegrid);
 	
 	cellWithoutValues 	= [];
@@ -53,6 +82,7 @@ function handelRightMove(gamegrid){
 	});	
 	
 	gamegrid = fillBlankCell(gamegrid,cellWithoutValues);
+	*/
 	return gamegrid;
 }
 
