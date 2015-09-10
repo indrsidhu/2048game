@@ -74,7 +74,7 @@ function handelDownMove(gamegrid){
 			
 			do{
 				
-				// if current cell have value and row is not last row then move
+				// if current cell have value and row is not last row then move 
 				if(((gamegrid[index])>0) && (i<4)){ //here boundary is last row
 					if(gamegrid[index+4]==0){
 						gamegrid[index+4] = gamegrid[index];
