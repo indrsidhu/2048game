@@ -12,16 +12,20 @@ printCell(gamegrid);
 $("body").on("keydown", function(e){
 	switch(e.keyCode){
 		case 37: //left
+			gamegrid = handelLeftMove(gamegrid);
 		break;
 		case 38: //up
+			gamegrid = handelUpMove(gamegrid);
 		break;
 		case 39: //right
 			gamegrid = handelRightMove(gamegrid);
-			printCell(gamegrid);//refresh			
 		break;
 		case 40: //down
+			gamegrid = handelDownMove(gamegrid);
 		break;
 	}
+	gamegrid = fillBlankCell(gamegrid);
+	printCell(gamegrid);//refresh			
  });
 
 
@@ -30,9 +34,98 @@ $("body").on("keydown", function(e){
 
 /* Lib functions */
 
-function handelRightMove(gamegrid){
+function handelUpMove(gamegrid){
+	//process each column
+	for (j = 1; j <= 4; j++) {
+		//process each row
+		for (i = 1; i <= 4; i++) {
+		
+			index = jQuery('#gamegrid > .row'+i+'-col'+j+'').attr('index');
+			index = parseInt(index);
 
-	console.log(gamegrid);
+			do{
+				// if current cell have value and row is not last row then move
+				if(((gamegrid[index])>0) && (i>1)){ //here last boundry is first row
+					if(gamegrid[index-4]==0){
+						gamegrid[index-4] = gamegrid[index];
+						gamegrid[index] = 0;
+					} else if(gamegrid[index-4]==gamegrid[index]){ // or id next cell value matched
+						score = gamegrid[index-4] = gamegrid[index]+gamegrid[index-4];
+						gamegrid[index] = 0;
+						updateScore(score);
+						return gamegrid;
+					}
+				}
+				index = (index-4);//jump next column (0,4,8,12)
+			} while(index>3)//3 is maximum index of first row
+		}//row loop
+	}//col loop
+	return gamegrid;
+}
+
+function handelDownMove(gamegrid){
+	//process each column
+	for (j = 4; j >= 1; j--) {
+		//process each row
+		for (i = 4; i >= 1; i--) {
+		
+			index = jQuery('#gamegrid > .row'+i+'-col'+j+'').attr('index');
+			index = parseInt(index);
+			
+			do{
+				
+				// if current cell have value and row is not last row then move
+				if(((gamegrid[index])>0) && (i<4)){ //here boundary is last row
+					if(gamegrid[index+4]==0){
+						gamegrid[index+4] = gamegrid[index];
+						gamegrid[index] = 0;
+					} else if(gamegrid[index+4]==gamegrid[index]){ // or id next cell value matched
+						score = gamegrid[index+4] = gamegrid[index]+gamegrid[index+4];
+						gamegrid[index] = 0;
+						updateScore(score);
+						return gamegrid;
+					}
+				}
+				index = (index+4);//jump next column (0,4,8,12)
+			} while(index<12)//<12 is boundary of last move in down button
+			
+		}//row loop
+	}//col loop
+	return gamegrid;
+}
+
+function handelLeftMove(gamegrid){
+	//process each row
+	for (i = 1; i <= 4; i++) {
+		//process each column from left most
+		for (j = 1; j <= 4; j++) {
+			//console.log('row'+i+'-col'+j);
+			//console.log('#gamegrid > .row'+i+'-col'+j+' > span');
+			index = jQuery('#gamegrid > .row'+i+'-col'+j+'').attr('index');
+			index = parseInt(index);
+			do{
+				// if current cell have value and column is not last column then move
+				if(((gamegrid[index])>0) && (j>1)){
+					//if next move is 0
+					if(gamegrid[index-1]==0){
+						gamegrid[index-1] = gamegrid[index];
+						gamegrid[index] = 0;
+					} else if(gamegrid[index-1]==gamegrid[index]){ // or id next cell value matched
+						score = gamegrid[index-1] = gamegrid[index]+gamegrid[index-1];
+						gamegrid[index] = 0;
+						updateScore(score);
+						return gamegrid;
+					}
+				}//if not empty
+				index--;
+			}while(index>=((i*4)-3))//while not reached at first column of each row (lastColumn-3 = first column)
+			
+		}//col loop
+	}//row loop
+	return gamegrid;
+}
+
+function handelRightMove(gamegrid){
 	//process each row
 	for (i = 1; i <= 4; i++) {
 		//process each column from right most
@@ -42,93 +135,34 @@ function handelRightMove(gamegrid){
 			index = jQuery('#gamegrid > .row'+i+'-col'+j+'').attr('index');
 			index = parseInt(index);
 			do{
+				// if current cell have value and column is not last column then move
 				if(((gamegrid[index])>0) && (j<4)){
-					//if next move is 0 and column is not last column then move
+					//if next move is 0
 					if(gamegrid[index+1]==0){
 						gamegrid[index+1] = gamegrid[index];
 						gamegrid[index] = 0;
+					} else if(gamegrid[index+1]==gamegrid[index]){ // or id next cell value matched
+						score = gamegrid[index+1] = gamegrid[index]+gamegrid[index+1];
+						gamegrid[index] = 0;
+						updateScore(score);
+						return gamegrid;
 					}
-					console.log("on");
 				}//if not empty
 				index++;
-			}while(index<((i*4)-1))//while no reached at last column of each row
+			}while(index<((i*4)-1))//while not reached at last column of each row
 			
 		}//col loop
 	}//row loop
+	return gamegrid;
+}
 
-	console.log(gamegrid);
-	
-
-	/*
-	console.log(gamegrid);
-	
-	cellWithoutValues 	= [];
-	cellWithValues 		= [];
-	
-	jQuery('#gamegrid > .cell > span').each( function (index, data) {
-		if(gamegrid[index]>0){ //pick only which have value
-			cellWithValues.push(index);
-		}
-	});
-	
-	cellWithValues.forEach(function(index) {
-		gamegrid = possibleMove(gamegrid,index,'right');
-	});
-	
+function fillBlankCell(gamegrid){
+	cellWithoutValues 		= [];
 	jQuery('#gamegrid > .cell > span').each( function (index, data) {
 		if(gamegrid[index]==0){
 			cellWithoutValues.push(index);
 		}
 	});	
-	
-	gamegrid = fillBlankCell(gamegrid,cellWithoutValues);
-	*/
-	return gamegrid;
-}
-
-function possibleMove(gamegrid,index,moveType){
-	switch(moveType){
-		case 'right':
-			boundries = [3,7,11,15]; // right boundries
-			//process only if not already at boundries
-			if(boundries.indexOf(index)==-1){
-				if(index<3){
-					gamegrid = processPossibleMove(gamegrid,index,3);
-				} else if(index<7){
-					gamegrid = processPossibleMove(gamegrid,index,7);
-				} else if(index<11){
-					gamegrid = processPossibleMove(gamegrid,index,11);
-				} else if(index<15){
-					gamegrid = processPossibleMove(gamegrid,index,15);
-				}
-			}//process only if not already at boundries
-		break;
-	}
-	return gamegrid;
-}
-
-function processPossibleMove(gamegrid,index,boundry){
-	if((index==(boundry-1)) && (gamegrid[boundry]!=0)){
-		return gamegrid;
-	}
-	
-	do{
-		if((gamegrid[index+1]==0) || (gamegrid[index+1]==gamegrid[index])){
-			if(gamegrid[index+1]==0){
-				gamegrid[index+1] = gamegrid[index];
-				gamegrid[index] = 0;
-			} else if((gamegrid[index+1]==gamegrid[index])){ 
-				gamegrid[index+1] = gamegrid[index+1]+gamegrid[index];
-				gamegrid[index] = 0;
-				break;
-			}
-		}
-		index++;
-	}while((index<(boundry)))
-	return gamegrid;
-}
-
-function fillBlankCell(gamegrid,cellWithoutValues){
 	value = getRandomeValue();
 	randomIndex = Math.floor((Math.random() * cellWithoutValues.length) + 1);
 	gamegrid[cellWithoutValues[randomIndex]] = value;
