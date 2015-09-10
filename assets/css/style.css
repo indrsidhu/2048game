@@ -13,6 +13,7 @@ float:left;
 text-align:center;
 margin:10px;
 font-size:30px;
+border-radius:4px;
 }
 
 #gamegrid .cell span{
@@ -21,6 +22,9 @@ display:block;
 }
 
 #gamegrid .active-cell{
-background:#61B891;
+background:#5C83AC;
 color:#fff;
+}
+#score{display:block;background-color:#61B891;color:#FFF; padding:10px;margin:20px 0 0 50px; text-align:center;
+font-size:30px;
 }

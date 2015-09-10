@@ -1,11 +1,10 @@
 var gamegrid = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
 
-
 //Initially fill first two cell with random 2 or 4;
 randomCell = Math.floor((Math.random() * 15) + 1);
 gamegrid[randomCell] = getRandomeValue();
-//randomCell = Math.floor((Math.random() * 15) + 1);
-//gamegrid[randomCell] = getRandomeValue();
+randomCell = Math.floor((Math.random() * 15) + 1);
+gamegrid[randomCell] = getRandomeValue();
 printCell(gamegrid);
 
 
@@ -32,7 +31,7 @@ $("body").on("keydown", function(e){
 
 
 
-/* Lib functions */
+/* Move control functions */
 
 function handelUpMove(gamegrid){
 	//process each column
@@ -53,6 +52,7 @@ function handelUpMove(gamegrid){
 						score = gamegrid[index-4] = gamegrid[index]+gamegrid[index-4];
 						gamegrid[index] = 0;
 						updateScore(score);
+						jQuery('#gamegrid > [index="'+(index-4)+'"]').fadeOut().fadeIn();
 						return gamegrid;
 					}
 				}
@@ -83,6 +83,7 @@ function handelDownMove(gamegrid){
 						score = gamegrid[index+4] = gamegrid[index]+gamegrid[index+4];
 						gamegrid[index] = 0;
 						updateScore(score);
+						jQuery('#gamegrid > [index="'+(index+4)+'"]').fadeOut().fadeIn();
 						return gamegrid;
 					}
 				}
@@ -114,6 +115,7 @@ function handelLeftMove(gamegrid){
 						score = gamegrid[index-1] = gamegrid[index]+gamegrid[index-1];
 						gamegrid[index] = 0;
 						updateScore(score);
+						jQuery('#gamegrid > [index="'+(index-1)+'"]').fadeOut().fadeIn();
 						return gamegrid;
 					}
 				}//if not empty
@@ -145,6 +147,7 @@ function handelRightMove(gamegrid){
 						score = gamegrid[index+1] = gamegrid[index]+gamegrid[index+1];
 						gamegrid[index] = 0;
 						updateScore(score);
+						jQuery('#gamegrid > [index="'+(index+1)+'"]').fadeOut().fadeIn();
 						return gamegrid;
 					}
 				}//if not empty
@@ -163,9 +166,14 @@ function fillBlankCell(gamegrid){
 			cellWithoutValues.push(index);
 		}
 	});	
-	value = getRandomeValue();
-	randomIndex = Math.floor((Math.random() * cellWithoutValues.length) + 1);
-	gamegrid[cellWithoutValues[randomIndex]] = value;
+	if(cellWithoutValues.length>0){
+		value = getRandomeValue();
+		randomIndex = Math.floor((Math.random() * cellWithoutValues.length));
+		gamegrid[cellWithoutValues[randomIndex]] = value;
+	} else{
+		score = jQuery("#score > span").text();
+		alert("Game over!, you score is :"+score);
+	}
 	return gamegrid;
 }
 
@@ -182,14 +190,18 @@ function printCell(gamegrid){
 }
 
 function getRandomeValue(){
-	var prob 	= [2,2,2,2,2,2,2,2,2,2];
+	/*
+		print 2 with 80% Probability
+		print 4 with 20% Probability
+	*/
+	var prob 	= [2,2,2,2,2,2,2,2,4,4];
 	randomIndex = Math.floor((Math.random() * 9) + 1);
 	return prob[randomIndex];
 }
 
 function updateScore(score){
-	current = jQuery("#score").text();
+	current = jQuery("#score > span").text();
 	score = parseInt(current) + parseInt(score);
-	jQuery("#score").text(score);
+	jQuery("#score > span").text(score);
 }
 
