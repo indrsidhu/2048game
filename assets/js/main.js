@@ -53,7 +53,7 @@ function handelUpMove(gamegrid){
 						gamegrid[index] = 0;
 						updateScore(score);
 						jQuery('#gamegrid > [index="'+(index-4)+'"]').fadeOut().fadeIn();
-						return gamegrid;
+						break;
 					}
 				}
 				index = (index-4);//jump next column (0,4,8,12)
@@ -84,7 +84,7 @@ function handelDownMove(gamegrid){
 						gamegrid[index] = 0;
 						updateScore(score);
 						jQuery('#gamegrid > [index="'+(index+4)+'"]').fadeOut().fadeIn();
-						return gamegrid;
+						break;
 					}
 				}
 				index = (index+4);//jump next column (0,4,8,12)
@@ -116,7 +116,7 @@ function handelLeftMove(gamegrid){
 						gamegrid[index] = 0;
 						updateScore(score);
 						jQuery('#gamegrid > [index="'+(index-1)+'"]').fadeOut().fadeIn();
-						return gamegrid;
+						break;
 					}
 				}//if not empty
 				index--;
@@ -148,7 +148,7 @@ function handelRightMove(gamegrid){
 						gamegrid[index] = 0;
 						updateScore(score);
 						jQuery('#gamegrid > [index="'+(index+1)+'"]').fadeOut().fadeIn();
-						return gamegrid;
+						break;
 					}
 				}//if not empty
 				index++;
